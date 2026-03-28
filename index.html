@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no, email=no, address=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content, maximum-scale=1.0">
+  <meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0B0A08" media="(prefers-color-scheme: dark)">
+  <title>Modigem — MOD APK Store</title>
+  <!-- ⚡ INSTANT THEME: apply dark + accent sebelum CSS load, cegah flash -->
+  <script>
+  (function(){
+    try {
+      var s = JSON.parse(localStorage.getItem('mdg_state')||'{}');
+      var mode = s.themeMode||(s.dark?'dark':'light');
+      var isDark = mode==='dark'||(mode==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) document.documentElement.classList.add('dark-init');
+      var A={
+        rose:  {l:'#E11D74',d:'#FF2D7A',lt:'rgba(225,29,116,0.11)',dt:'rgba(255,45,122,0.15)',lt2:'rgba(225,29,116,0.06)',dt2:'rgba(255,45,122,0.07)'},
+        blue:  {l:'#0066FF',d:'#3B82F6',lt:'rgba(0,102,255,0.10)', dt:'rgba(59,130,246,0.15)', lt2:'rgba(0,102,255,0.05)', dt2:'rgba(59,130,246,0.07)'},
+        gold:  {l:'#D97706',d:'#F59E0B',lt:'rgba(217,119,6,0.11)', dt:'rgba(245,158,11,0.15)', lt2:'rgba(217,119,6,0.06)', dt2:'rgba(245,158,11,0.07)'},
+        milk:  {l:'#6B7280',d:'#F9FAFB',lt:'rgba(107,114,128,0.10)',dt:'rgba(249,250,251,0.13)',lt2:'rgba(107,114,128,0.05)',dt2:'rgba(249,250,251,0.06)'},
+        black: {l:'#111827',d:'#374151',lt:'rgba(17,24,39,0.10)',  dt:'rgba(55,65,81,0.18)',   lt2:'rgba(17,24,39,0.05)', dt2:'rgba(55,65,81,0.09)'},
+        violet:{l:'#7C3AED',d:'#A78BFA',lt:'rgba(124,58,237,0.11)',dt:'rgba(167,139,250,0.15)',lt2:'rgba(124,58,237,0.06)',dt2:'rgba(167,139,250,0.07)'}
+      };
+      var r=document.documentElement.style;
+      if(s.customColor){
+        var h=s.customColor.replace('#','');
+        var rv=parseInt(h.slice(0,2),16),gv=parseInt(h.slice(2,4),16),bv=parseInt(h.slice(4,6),16);
+        r.setProperty('--hi',s.customColor);
+        r.setProperty('--hi-tint','rgba('+rv+','+gv+','+bv+','+(isDark?'0.15':'0.11')+')');
+        r.setProperty('--hi-tint2','rgba('+rv+','+gv+','+bv+','+(isDark?'0.07':'0.06')+')');
+      } else {
+        var ac=A[s.accent||'blue']||A.blue;
+        r.setProperty('--hi',       isDark?ac.d:ac.l);
+        r.setProperty('--hi-tint',  isDark?ac.dt:ac.lt);
+        r.setProperty('--hi-tint2', isDark?ac.dt2:ac.lt2);
+      }
+    }catch(e){}
+  })();
+  </script>
+    <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<div class="app-wrap">
+
+  <!-- HOME -->
+  <div id="home" class="page active">
+    <div class="topbar">
+      <div class="topbar-logo-wrap"><img src="https://github.com/modigem/Modigem/releases/download/Modigem/modigem.png" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" class="topbar-logo-img" alt="Modigem"><span class="topbar-logo" style="display:none;font-size:20px;font-weight:900;color:var(--text)">Modigem</span></div>
+      <div class="topbar-pill">
+        <button class="topbar-pill-btn topbar-pill-donate" onclick="goTo('donate')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>Donate</span>
+        </button>
+        <div class="topbar-pill-sep"></div>
+        <button class="topbar-pill-btn" id="notif-btn" onclick="goTo('notif')" style="position:relative">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot" id="notif-dot" style="display:none"></span>
+        </button>
+        <div class="topbar-pill-sep"></div>
+        <button class="topbar-pill-btn" id="dark-toggle" onclick="toggleDark()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-section" id="today-wrap"></div>
+
+    <!-- PINTASAN SAYA -->
+    <div id="pintasan-section" style="display:none;padding-top:4px">
+      <div class="section-header" style="padding:0 20px;margin-bottom:10px;margin-top:18px">
+        <div class="section-title">Pintasan Saya</div>
+        <div class="section-more" onclick="openPinPicker()">+ Tambah</div>
+      </div>
+      <div id="pintasan-wrap" style="padding:0 16px 4px;display:flex;gap:10px;flex-wrap:wrap"></div>
+    </div>
+
+    <div class="cat-scroll">
+      <div class="cat-chip active" onclick="renderHomeList('apps')">
+        <span class="cat-chip-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-linecap="round"/></svg></span>
+        <span class="cat-chip-label">Apps</span>
+      </div>
+      <div class="cat-chip" onclick="renderHomeList('games')">
+        <span class="cat-chip-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="12" rx="5"/><line x1="6" y1="12" x2="10" y2="12" stroke-linecap="round"/><line x1="8" y1="10" x2="8" y2="14" stroke-linecap="round"/><circle cx="15" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="17" cy="13" r="1" fill="currentColor" stroke="none"/></svg></span>
+        <span class="cat-chip-label">Games</span>
+      </div>
+      <div class="cat-chip" onclick="goTo('charts')">
+        <span class="cat-chip-icon"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="20" x2="18" y2="10" stroke-linecap="round"/><line x1="12" y1="20" x2="12" y2="4" stroke-linecap="round"/><line x1="6" y1="20" x2="6" y2="14" stroke-linecap="round"/></svg></span>
+        <span class="cat-chip-label">Charts</span>
+      </div>
+      <div class="cat-chip" onclick="showFavs()">
+        <span class="cat-chip-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="cat-chip-label">Favorit</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Unggulan</div>
+        <div class="section-more" onclick="goTo('explore')">Lihat Semua</div>
+      </div>
+      <div class="feat-scroll-wrap">
+        <div class="feat-scroll" id="feat-wrap"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Top Hari Ini</div>
+        <div class="section-more" onclick="goTo('explore')">Semua</div>
+      </div>
+      <div id="rv-section" style="display:none;padding-bottom:8px"></div>
+      <div class="app-list" id="home-list"></div>
+    </div>
+  </div>
+
+  <!-- EXPLORE -->
+  <div id="explore" class="page">
+    <div class="topbar">
+      <div class="topbar-page-title">Explore</div>
+      <button id="explore-sort-btn" class="sort-btn" onclick="openSort(this)">⇅</button>
+    </div>
+    <div class="explore-toggle-wrap">
+      <div class="explore-toggle" id="explore-toggle">
+        <div class="explore-toggle-pill" id="explore-toggle-pill"></div>
+        <button class="explore-toggle-btn active" id="etab-apps" onclick="setExploreTab('apps')">Apps</button>
+        <button class="explore-toggle-btn" id="etab-games" onclick="setExploreTab('games')">Games</button>
+      </div>
+    </div>
+    <div class="filter-row" id="explore-filter"></div>
+    <div class="app-grid" id="explore-grid"></div>
+  </div>
+
+  <!-- CHARTS -->
+  <div id="charts" class="page">
+    <div class="topbar">
+      <div class="topbar-page-title" style="flex:1">Charts</div>
+      <button id="charts-sort-btn" onclick="openSort(this)" style="width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0" title="Urutkan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+        </svg>
+      </button>
+    </div>
+    <div class="lb-tabs">
+      <button class="lb-tab active" data-tab="apps" onclick="setLbTab('apps')">Apps</button>
+      <button class="lb-tab" data-tab="games" onclick="setLbTab('games')">Games</button>
+    </div>
+    <div id="lb-list"></div>
+  </div>
+
+  <!-- SORT SHEET -->
+  <div class="sheet-overlay" id="sort-sheet" onclick="if(event.target===this)closeSheet('sort-sheet')">
+    <div class="sheet-box" id="sort-sheet-box" style="padding:20px 20px calc(env(safe-area-inset-bottom,0px)+36px)"></div>
+  </div>
+
+  <!-- AKUN -->
+  <div id="akun" class="page">
+    <div class="topbar"><div class="topbar-page-title">Akun</div></div>
+    <div id="akun-content"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="settings" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="topbar-page-title">Pengaturan</div>
+    </div>
+    <div id="settings-content"></div>
+  </div>
+
+  <!-- FITUR LAINNYA -->
+  <div id="fitur-lainnya" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="topbar-page-title">Fitur Lainnya</div>
+    </div>
+    <div id="fitur-lainnya-content"></div>
+  </div>
+
+  <!-- QNA PAGE -->
+  <div id="qna-page" class="page" style="display:flex;flex-direction:column;">
+    <div class="topbar" style="flex-shrink:0;">
+      <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="topbar-page-title">MoDiGEM Q&amp;A</div>
+    </div>
+    <div id="qna-page-body" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;">
+      <div id="qnap-view-list" style="display:flex;flex-direction:column;">
+        <div style="padding:14px 16px 0;">
+          <button id="qnap-contact-btn" onclick="window._qnapGoContact && window._qnapGoContact()" style="width:100%;padding:13px 16px;border-radius:14px;background:linear-gradient(135deg,#7C5CFC,#4f7cff);border:none;cursor:pointer;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Hubungi Admin
+          </button>
+        </div>
+        <div id="qnap-items-list" style="padding:12px 16px;display:flex;flex-direction:column;gap:8px;"></div>
+        <div id="qnap-list-loading" style="text-align:center;padding:50px 16px;color:var(--subtext);">
+          <div class="qna-spinner" style="width:26px;height:26px;border-width:3px;margin:0 auto 12px;"></div>
+          <div style="font-size:13px;">Memuat pertanyaan...</div>
+        </div>
+        <div id="qnap-list-empty" style="display:none;text-align:center;padding:60px 20px;color:var(--subtext);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="48" height="48" style="opacity:.3;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="3"/></svg>
+          <div style="font-size:14px;font-weight:600;">Belum ada pertanyaan</div>
+        </div>
+      </div>
+      <div id="qnap-view-detail" style="display:none;flex-direction:column;padding:16px;gap:12px;">
+        <button onclick="window._qnapGoList && window._qnapGoList()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;cursor:pointer;font-size:13px;font-weight:700;color:var(--text);width:fit-content;-webkit-tap-highlight-color:transparent;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+          Kembali
+        </button>
+        <div id="qnap-detail-question" style="font-size:16px;font-weight:700;color:var(--text);line-height:1.5;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:16px;"></div>
+        <div id="qnap-detail-answer" style="font-size:14px;color:var(--text2);line-height:1.7;padding:16px;background:var(--bg3);border-radius:16px;white-space:pre-wrap;"></div>
+      </div>
+      <div id="qnap-view-chat" style="display:none;flex-direction:column;flex:1;min-height:0;">
+        <div style="padding:12px 16px 8px;flex-shrink:0;">
+          <button onclick="window._qnapGoList && window._qnapGoList()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;cursor:pointer;font-size:13px;font-weight:700;color:var(--text);-webkit-tap-highlight-color:transparent;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+            Kembali
+          </button>
+        </div>
+        <div id="qnap-chat-name-wrap" style="padding:0 16px 8px;flex-shrink:0;">
+          <input id="qnap-chat-name-input" type="text" placeholder="Nama / username kamu..." maxlength="40" style="width:100%;padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:14px;outline:none;box-sizing:border-box;font-family:inherit;"/>
+        </div>
+        <div id="qnap-chat-msgs" style="flex:1;overflow-y:auto;padding:8px 16px;display:flex;flex-direction:column;gap:8px;min-height:0;"></div>
+        <div style="padding:10px 16px;display:flex;gap:8px;border-top:1px solid var(--sep);flex-shrink:0;background:var(--bg);">
+          <textarea id="qnap-chat-inp" rows="1" placeholder="Ketik pesan..." style="flex:1;padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:14px;outline:none;resize:none;font-family:inherit;line-height:1.4;max-height:80px;overflow-y:auto;box-sizing:border-box;"></textarea>
+          <button onclick="window._qnapSend && window._qnapSend()" style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#7C5CFC,#4f7cff);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL -->
+  <div id="detail-info" class="page"></div>
+
+  <div id="detail" class="page"></div>
+
+  <!-- DONATE -->
+  <div id="donate" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="topbar-page-title">Donate</div>
+    </div>
+    <div id="donate-content"></div>
+  </div>
+
+  <!-- NOTIF -->
+  <div id="notif" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="topbar-page-title" id="notif-page-title">Notifikasi</div>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button id="notif-select-all-btn" onclick="notifSelectAll()" style="display:none;padding:6px 12px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;">Semua</button>
+        <button id="notif-delete-btn" onclick="notifDeleteSelected()" style="display:none;padding:6px 12px;border-radius:20px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);font-size:12px;font-weight:700;color:#ef4444;cursor:pointer;">Hapus</button>
+        <button id="notif-edit-btn" onclick="notifToggleEdit()" style="padding:6px 14px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;">Edit</button>
+      </div>
+    </div>
+    <div id="notif-content"></div>
+  </div>
+
+  <!-- FAVS -->
+  <div id="favs" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="topbar-page-title">Favorit</div>
+    </div>
+    <div id="favs-content"></div>
+  </div>
+
+  <!-- RIWAYAT UNDUHAN -->
+  <div id="dl-history" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="topbar-page-title">Riwayat Unduhan</div>
+    </div>
+    <div id="dl-history-content" style="padding-top:12px;padding-bottom:40px;"></div>
+  </div>
+
+
+  <!-- RIWAYAT UNDUHAN -->
+  <div id="dl-history" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="topbar-page-title">Riwayat Unduhan</div>
+    </div>
+    <div id="dl-history-content"></div>
+  </div>
+
+  <!-- RIWAYAT ULASAN -->
+  <div id="my-reviews" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="topbar-page-title">Riwayat Ulasan</div>
+    </div>
+    <div id="my-reviews-content"></div>
+  </div>
+
+  <!-- TENTANG MODIGEM -->
+  <div id="tentang" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="topbar-page-title">Tentang</div>
+    </div>
+    <div id="tentang-content"></div>
+  </div>
+
+  <!-- BOTTOM NAV — SVG icons -->
+  <div class="nav-wrap">
+    <div class="nav-bar">
+      <div class="nav-pill" id="nav-pill"></div>
+
+      <button class="nav-btn active" id="nav-home" onclick="goTo('home')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        <span class="nav-lbl" id="nav-home-lbl">Home</span>
+      </button>
+
+      <button class="nav-btn" id="nav-search" onclick="goTo('search')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <span class="nav-lbl">Cari</span>
+      </button>
+
+      <button class="nav-btn" id="nav-explore" onclick="goTo('explore')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+        <span class="nav-lbl" id="nav-explore-lbl">Explore</span>
+      </button>
+
+      <button class="nav-btn" id="nav-charts" onclick="goTo('charts')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <span class="nav-lbl" id="nav-charts-lbl">Charts</span>
+      </button>
+
+      <button class="nav-btn" id="nav-akun" onclick="goTo('akun')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <span class="nav-lbl" id="nav-akun-lbl">Akun</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- HALAMAN SEARCH -->
+  <div id="search" class="page">
+    <div class="topbar">
+      <div class="topbar-page-title">Search</div>
+    </div>
+    
+    <!-- Search controls di bawah topbar -->
+    <div style="padding:12px 16px 0;display:flex;align-items:center;gap:10px;">
+      <button id="smart-search-toggle" onclick="toggleSmartSearch()" style="flex-shrink:0;display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:999px;border:1.5px solid var(--border);background:var(--bg3);font-size:11px;font-weight:800;color:var(--subtext);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 0.18s;letter-spacing:0.2px;white-space:nowrap;">
+        <svg id="smart-toggle-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v3l2 2"/></svg>
+        <span id="smart-toggle-lbl">Smart</span>
+        <span id="smart-toggle-check" style="font-size:12px">✓</span>
+      </button>
+      <div class="search-bar" style="flex:1;min-width:0;padding:10px 14px;border-radius:var(--r-xl);">
+        <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <input class="search-input" id="search-input" type="search" placeholder="Cari app atau game…" autocomplete="off" style="font-size:16px">
+        <button class="search-clear" id="search-clear">✕</button>
+      </div>
+      <button id="search-sort-btn" onclick="openSort(this)" style="width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;" title="Urutkan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div style="padding:0 20px 12px;">
+      <div class="sug-box" id="search-sug" style="position:relative;top:0;margin-top:0;border-radius:var(--r-lg)"></div>
+    </div>
+
+      <!-- Recent searches -->
+      <div id="search-recent" style="display:none;margin-bottom:28px;padding:0 20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="srch-sec-title">Pencarian Terakhir</div>
+          <button onclick="clearAllRecent()" style="font-size:12px;font-weight:700;color:var(--hi);background:none;border:none;cursor:pointer;padding:4px 0">Hapus</button>
+        </div>
+        <div id="recent-list"></div>
+      </div>
+
+      <!-- Trending -->
+      <div id="search-trending" style="margin-bottom:28px;padding:0 20px">
+        <div class="srch-sec-title" style="margin-bottom:14px;display:flex;align-items:center;gap:6px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Trending Sekarang
+        </div>
+        <div class="srch-trend-list" id="search-trend-list"></div>
+      </div>
+
+      <!-- Browse by category -->
+      <div style="padding:0 20px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 90px)">
+        <div class="srch-sec-title" style="margin-bottom:14px;display:flex;align-items:center;gap:6px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Jelajahi Kategori
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="search-cat-grid"></div>
+      </div>
+
+  </div>
+
+
+  <!-- DOWNLOAD SHEET -->
+  <div class="sheet-overlay" id="dl-sheet-overlay" onclick="if(event.target===this)closeSheet('dl-sheet-overlay')">
+    <div class="sheet-box" id="dl-sheet-box" style="border-radius:var(--r-2xl) var(--r-2xl) 0 0;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))"></div>
+  </div>
+
+
+  <!-- ACTION SHEET -->
+  <div class="sheet-overlay" id="action-sheet" onclick="if(event.target===this)closeSheet('action-sheet')">
+    <div class="sheet-box" id="action-box"></div>
+  </div>
+
+  <div class="swipe-edge" id="swipe-edge"></div>
+  <div class="toast-wrap" id="toast-wrap"></div>
+
+</div>
+  <script src="script.js"></script>
+
+  <!-- CFG SHEETS -->
+  <div class="sheet-overlay" id="cfg-accent-sheet" onclick="if(event.target===this)closeSheet('cfg-accent-sheet')">
+    <div class="sheet-box" id="cfg-accent-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-navbar-sheet" onclick="if(event.target===this)closeSheet('cfg-navbar-sheet')">
+    <div class="sheet-box" id="cfg-navbar-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-explore-sheet" onclick="if(event.target===this)closeSheet('cfg-explore-sheet')">
+    <div class="sheet-box" id="cfg-explore-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-effect-sheet" onclick="if(event.target===this)closeSheet('cfg-effect-sheet')">
+    <div class="sheet-box" id="cfg-effect-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-font-sheet" onclick="if(event.target===this)closeSheet('cfg-font-sheet')">
+    <div class="sheet-box" id="cfg-font-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+
+  <div class="sheet-overlay" id="cfg-fontfam-sheet" onclick="if(event.target===this)closeSheet('cfg-fontfam-sheet')">
+    <div class="sheet-box" id="cfg-fontfam-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+
+  <div class="sheet-overlay" id="cfg-lang-sheet" onclick="if(event.target===this)closeSheet('cfg-lang-sheet')">
+    <div class="sheet-box" id="cfg-lang-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-haptic-sheet" onclick="if(event.target===this)closeSheet('cfg-haptic-sheet')">
+    <div class="sheet-box" id="cfg-haptic-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-kartu-sheet" onclick="if(event.target===this)closeSheet('cfg-kartu-sheet')">
+    <div class="sheet-box" id="cfg-kartu-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-anim-sheet" onclick="if(event.target===this)closeSheet('cfg-anim-sheet')">
+    <div class="sheet-box" id="cfg-anim-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+
+  <!-- Android-style context menu overlay -->
+  <div id="ctx-overlay" onclick="closeCtx()" style="position:fixed;inset:0;z-index:800;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s ease;backdrop-filter:blur(20px) brightness(0.5);-webkit-backdrop-filter:blur(20px) brightness(0.5)">
+    <div id="ctx-menu" onclick="event.stopPropagation()" style="width:260px;background:rgba(30,30,30,0.92);border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);transform:scale(0.9);transition:transform 0.2s var(--spring)"></div>
+  </div>
+
+  <!-- Detail menu sheet (titik 3) — compact horizontal actions -->
+  <div class="sheet-overlay" id="dms-sheet" onclick="if(event.target===this)closeSheet('dms-sheet')">
+    <div class="sheet-box" id="dms-box"></div>
+  </div>
+
+
+  <!-- HOME LAYOUT SHEET -->
+  <div class="sheet-overlay" id="cfg-home-sheet" onclick="if(event.target===this)closeSheet('cfg-home-sheet')">
+    <div class="sheet-box" id="cfg-home-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-akun-sheet" onclick="if(event.target===this)closeSheet('cfg-akun-sheet')">
+    <div class="sheet-box" id="cfg-akun-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-search-sheet" onclick="if(event.target===this)closeSheet('cfg-search-sheet')">
+    <div class="sheet-box" id="cfg-search-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="cfg-topbar-sheet" onclick="if(event.target===this)closeSheet('cfg-topbar-sheet')">
+    <div class="sheet-box" id="cfg-topbar-box" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+
+  <!-- Download Warning Modal -->
+  <div id="dl-warn-overlay" onclick="closeDlWarn()" style="position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.22s ease;background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)">
+    <div id="dl-warn-card" onclick="event.stopPropagation()" style="width:100%;max-width:320px;background:var(--card);border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.08);transform:scale(0.92) translateY(20px);transition:transform 0.28s var(--spring)">
+      <div id="dl-warn-box" style="padding:28px 24px 24px">
+        <!-- Icon -->
+        <div style="width:60px;height:60px;border-radius:18px;background:rgba(239,68,68,0.12);border:1.5px solid rgba(239,68,68,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <!-- Text -->
+        <div id="dl-warn-title" style="font-size:18px;font-weight:800;color:var(--text);letter-spacing:-0.4px;margin-bottom:8px;line-height:1.3">Mod apps are not guaranteed safe!</div>
+        <div id="dl-warn-desc" style="font-size:14px;color:var(--subtext);line-height:1.55;margin-bottom:6px">Are you sure you want to download <strong class="dl-warn-app-name" style="color:var(--text)"></strong>?</div>
+        <div id="dl-warn-note" style="font-size:12px;color:rgba(239,68,68,0.8);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);border-radius:10px;padding:10px 12px;margin-top:14px;line-height:1.5">⚠️ Download dari sumber yang tidak dikenal bisa berisiko. Pastikan kamu percaya sumbernya.</div>
+        <div id="dl-note-container" style="margin-top:10px;"></div>
+      </div>
+      <!-- Buttons -->
+      <div style="display:flex;gap:0;border-top:1px solid var(--sep)">
+        <button id="dl-warn-btn-no" onclick="closeDlWarn()" style="flex:1;padding:16px;background:transparent;border:none;border-right:1px solid var(--sep);font-size:16px;font-weight:600;color:var(--subtext);cursor:pointer;-webkit-tap-highlight-color:transparent">Tidak</button>
+        <button id="dl-warn-btn-yes" onclick="confirmDlWarn()" style="flex:1;padding:16px;background:transparent;border:none;font-size:16px;font-weight:800;color:#EF4444;cursor:pointer;-webkit-tap-highlight-color:transparent">Ya, Unduh</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- QR GENERATOR SHEET -->
+  <div class="sheet-overlay" id="qr-gen-sheet" onclick="if(event.target===this)closeSheet('qr-gen-sheet')">
+    <div class="sheet-box" id="qr-gen-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- DOWNLOAD ESTIMATOR SHEET -->
+  <div class="sheet-overlay" id="dl-estimator-sheet" onclick="if(event.target===this)closeSheet('dl-estimator-sheet')">
+    <div class="sheet-box" id="dl-estimator-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- STORAGE CLEANER SHEET -->
+  <div class="sheet-overlay" id="storage-cleaner-sheet" onclick="if(event.target===this)closeSheet('storage-cleaner-sheet')">
+    <div class="sheet-box" id="storage-cleaner-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- APK READER SHEET -->
+  <div class="sheet-overlay" id="apk-reader-sheet" onclick="if(event.target===this)closeSheet('apk-reader-sheet')">
+    <div class="sheet-box" id="apk-reader-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- CONTACT MENU SHEET -->
+  <div class="sheet-overlay" id="contact-sheet" onclick="if(event.target===this)closeSheet('contact-sheet')">
+    <div class="sheet-box" id="contact-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- CONTACT NEW MESSAGE SHEET -->
+  <div class="sheet-overlay" id="contact-new-sheet" onclick="if(event.target===this)closeSheet('contact-new-sheet')">
+    <div class="sheet-box" id="contact-new-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- CONTACT HISTORY SHEET -->
+  <div class="sheet-overlay" id="contact-history-sheet" onclick="if(event.target===this)closeSheet('contact-history-sheet')">
+    <div class="sheet-box" id="contact-history-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- CONTACT DETAIL SHEET -->
+  <div class="sheet-overlay" id="contact-detail-sheet" onclick="if(event.target===this)closeSheet('contact-detail-sheet')">
+    <div class="sheet-box" id="contact-detail-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- BARCODE SCANNER SHEET -->
+  <div class="sheet-overlay" id="scanner-sheet" onclick="if(event.target===this)closeScannerSheet()">
+    <div class="sheet-box" id="scanner-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:96dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- TOOL SHEETS: TIP, CURRENCY, TIMER, BATTERY -->
+  <div class="sheet-overlay" id="tip-sheet" onclick="if(event.target===this)closeSheet('tip-sheet')">
+    <div class="sheet-box" id="tip-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="currency-sheet" onclick="if(event.target===this)closeSheet('currency-sheet')">
+    <div class="sheet-box" id="currency-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="timer-sheet" onclick="if(event.target===this)closeSheet('timer-sheet')">
+    <div class="sheet-box" id="timer-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="battery-sheet" onclick="if(event.target===this)closeSheet('battery-sheet')">
+    <div class="sheet-box" id="battery-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- FILE CONVERTER SHEETS -->
+  <div class="sheet-overlay" id="fconv-sheet" onclick="if(event.target===this)closeSheet('fconv-sheet')">
+    <div class="sheet-box" id="fconv-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <div class="sheet-overlay" id="fconv-work-sheet" onclick="if(event.target===this)closeSheet('fconv-work-sheet')">
+    <div class="sheet-box" id="fconv-work-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- TOOLS SHEET -->
+  <div class="sheet-overlay" id="tools-sheet" onclick="if(event.target===this)closeSheet('tools-sheet')">
+    <div class="sheet-box" id="tools-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);overflow-y:auto;max-height:88dvh;"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- CALCULATOR SHEET -->
+  <div class="sheet-overlay" id="calc-sheet" onclick="if(event.target===this)closeSheet('calc-sheet')">
+    <div class="sheet-box" id="calc-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- CONVERTER SHEET -->
+  <div class="sheet-overlay" id="converter-sheet" onclick="if(event.target===this)closeSheet('converter-sheet')">
+    <div class="sheet-box" id="converter-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- SHARE SHEET -->
+  <div class="sheet-overlay" id="share-web-sheet" onclick="if(event.target===this)closeSheet('share-web-sheet')">
+    <div class="sheet-box" id="share-web-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+  </div>
+  <!-- CLEAR DATA MODAL -->
+  <div id="clear-data-overlay" onclick="closeClearDataModal()" style="position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.22s ease;background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)">
+    <div id="clear-data-card" onclick="event.stopPropagation()" style="width:100%;max-width:320px;background:var(--card);border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.4);transform:scale(0.92) translateY(20px);transition:transform 0.28s var(--spring)">
+      <div style="padding:28px 24px 20px">
+        <div style="width:60px;height:60px;border-radius:18px;background:rgba(239,68,68,0.12);border:1.5px solid rgba(239,68,68,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </div>
+        <div id="clear-data-title" style="font-size:18px;font-weight:800;color:var(--text);letter-spacing:-0.4px;margin-bottom:8px">Hapus Semua Data?</div>
+        <div id="clear-data-desc" style="font-size:14px;color:var(--subtext);line-height:1.6">Semua pengaturan, favorit, riwayat unduhan, dan ulasan akan <strong id="clear-data-bold" style="color:var(--text)">dihapus permanen</strong>.</div>
+        <div id="clear-data-warn" style="font-size:12px;color:rgba(239,68,68,0.9);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);border-radius:10px;padding:10px 12px;margin-top:12px;line-height:1.5">⚠️ Tindakan ini tidak bisa dibatalkan.</div>
+      </div>
+      <div style="display:flex;border-top:1px solid var(--sep)">
+        <button id="clear-data-btn-cancel" onclick="closeClearDataModal()" style="flex:1;padding:16px;background:transparent;border:none;border-right:1px solid var(--sep);font-size:16px;font-weight:600;color:var(--subtext);cursor:pointer;-webkit-tap-highlight-color:transparent">Batal</button>
+        <button id="clear-data-btn-confirm" onclick="executeClearData()" style="flex:1;padding:16px;background:transparent;border:none;font-size:16px;font-weight:800;color:#EF4444;cursor:pointer;-webkit-tap-highlight-color:transparent">Hapus</button>
+      </div>
+    </div>
+  </div>
+  <!-- MINIGEM SHEET -->
+  <div class="sheet-overlay" id="minigem-sheet" onclick="if(event.target===this)closeMiniGem()">
+    <div class="sheet-box" id="minigem-box">
+      <div class="sheet-handle" style="margin:12px auto 0;flex-shrink:0"></div>
+
+      <!-- HOME -->
+      <div id="minigem-home">
+        <div style="padding:14px 20px 6px;flex-shrink:0">
+          <div style="font-size:22px;font-weight:900;letter-spacing:-0.6px;color:var(--text)">Minigem</div>
+          <div style="font-size:13px;color:var(--subtext);margin-top:2px" id="mg-tagline">Santai sebentar ☕</div>
+        </div>
+        <div class="mg-list">
+          <div class="mg-game-card" onclick="startGame('dino')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#10b981,#059669)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="3" y="11" width="4" height="8" rx="2"/><path d="M7 15h6l2-4h2a2 2 0 0 1 0 4h-2l-1 4H7"/><circle cx="9" cy="8" r="2"/></svg>
+            </div>
+            <div class="mg-game-info">
+              <div class="mg-game-name">Dino Run</div>
+              <div class="mg-game-desc" id="mg-desc-dino">Lompati rintangan, raih skor tertinggi</div>
+            </div>
+            <div class="mg-hs-block">
+              <div class="mg-hs-label">Best</div>
+              <div class="mg-hs-val" id="hs-dino-val">0</div>
+            </div>
+          </div>
+          <div class="mg-game-card" onclick="startGame('ttt')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,var(--hi),#f43f5e)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" width="28" height="28"><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+            </div>
+            <div class="mg-game-info">
+              <div class="mg-game-name">Tic Tac Toe</div>
+              <div class="mg-game-desc" id="mg-desc-ttt">2 pemain, giliran manual</div>
+            </div>
+            <div class="mg-hs-block">
+              <div class="mg-hs-label">Wins</div>
+              <div class="mg-hs-val" id="hs-ttt-val">0</div>
+            </div>
+          </div>
+          <div class="mg-game-card" onclick="startGame('tap')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+            </div>
+            <div class="mg-game-info">
+              <div class="mg-game-name">Tap Blitz</div>
+              <div class="mg-game-desc" id="mg-desc-tap">Tap lingkaran secepat mungkin — 15 detik</div>
+            </div>
+            <div class="mg-hs-block">
+              <div class="mg-hs-label">Best</div>
+              <div class="mg-hs-val" id="hs-tap-val">0</div>
+            </div>
+          </div>
+
+          <!-- GAME 4: COLOR MATCH -->
+          <div class="mg-game-card" onclick="startGame('color')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="13.5" cy="6.5" r="2.5" fill="#fff" stroke="none"/><circle cx="17.5" cy="10.5" r="2.5" fill="rgba(255,255,255,0.5)" stroke="none"/><circle cx="8.5" cy="7.5" r="2.5" fill="rgba(255,255,255,0.7)" stroke="none"/><circle cx="6.5" cy="12.5" r="2.5" fill="rgba(255,255,255,0.4)" stroke="none"/><path d="M12 22a7 7 0 1 1 0-14 7 7 0 0 1 0 14z" stroke="#fff" stroke-width="2"/></svg>
+            </div>
+            <div class="mg-game-info">
+              <div class="mg-game-name">Color Match</div>
+              <div class="mg-game-desc" id="mg-desc-color">Tap warna teks, bukan arti katanya!</div>
+            </div>
+            <div class="mg-hs-block">
+              <div class="mg-hs-label">Best</div>
+              <div class="mg-hs-val" id="hs-color-val">0</div>
+            </div>
+          </div>
+
+          <!-- GAME 5: MINESWEEPER -->
+          <div class="mg-game-card" onclick="startGame('mine')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#6b7280,#374151)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+            </div>
+            <div class="mg-game-info">
+              <div class="mg-game-name">Minesweeper</div>
+              <div class="mg-game-desc" id="mg-desc-mine">Hindari bom, buka semua kotak aman</div>
+            </div>
+            <div class="mg-hs-block">
+              <div class="mg-hs-label">Wins</div>
+              <div class="mg-hs-val" id="hs-mine-val">0</div>
+            </div>
+          </div>
+
+          <!-- GAME 6: REFLEX TEST -->
+          <div class="mg-game-card" onclick="startGame('reflex')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#ef4444,#b91c1c)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="rgba(255,255,255,0.3)" stroke="#fff"/></svg>
+            </div>
+            <div class="mg-game-info">
+              <div class="mg-game-name">Reflex Test</div>
+              <div class="mg-game-desc" id="mg-desc-reflex">Tap saat hijau — JANGAN tap saat merah!</div>
+            </div>
+            <div class="mg-hs-block">
+              <div class="mg-hs-label">Best</div>
+              <div class="mg-hs-val" id="hs-reflex-val">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GAME AREA -->
+      <div id="minigem-game"></div>
+    </div>
+  </div>
+
+  <!-- MOOD DETECTOR SHEET -->
+  <div class="sheet-overlay" id="mood-sheet" onclick="if(event.target===this)closeSheet('mood-sheet')">
+    <div class="sheet-box" id="mood-box" style="padding:0;border-radius:var(--r-2xl) var(--r-2xl) 0 0;overflow:hidden;max-height:90dvh;display:flex;flex-direction:column;padding-bottom:calc(env(safe-area-inset-bottom,0px)+20px)"></div>
+  </div>
+
+  <!-- LUCKY SPIN SHEET -->
+  <div class="sheet-overlay" id="spin-sheet" onclick="if(event.target===this)closeSheet('spin-sheet')">
+    <div class="sheet-box" id="spin-box" style="padding:0;border-radius:var(--r-2xl) var(--r-2xl) 0 0;overflow:hidden;max-height:92dvh;display:flex;flex-direction:column;padding-bottom:calc(env(safe-area-inset-bottom,0px)+20px)"></div>
+  </div>
+
+  <!-- ROAST MY PHONE SHEET -->
+  <div class="sheet-overlay" id="roast-sheet" onclick="if(event.target===this)closeSheet('roast-sheet')">
+    <div class="sheet-box" id="roast-box" style="padding:0;border-radius:var(--r-2xl) var(--r-2xl) 0 0;overflow:hidden;max-height:90dvh;display:flex;flex-direction:column;padding-bottom:calc(env(safe-area-inset-bottom,0px)+20px)"></div>
+  </div>
+
+  <!-- APP BATTLE SHEET -->
+  <div class="sheet-overlay" id="battle-sheet" onclick="if(event.target===this)closeSheet('battle-sheet')">
+    <div class="sheet-box" id="battle-box" style="padding:0;border-radius:var(--r-2xl) var(--r-2xl) 0 0;overflow:hidden;max-height:92dvh;display:flex;flex-direction:column;padding-bottom:calc(env(safe-area-inset-bottom,0px)+20px)"></div>
+  </div>
+
+  <!-- CONFETTI CANVAS (global) -->
+  <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none"></canvas>
+
+  <!-- ── AGREEMENT DIALOG ── -->
+  <div id="agree-dialog" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9980;padding:0 12px calc(env(safe-area-inset-bottom,0px) + 12px);pointer-events:none;">
+    <div id="agree-dialog-box" style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 18px;box-shadow:0 -4px 32px rgba(0,0,0,0.18),0 2px 0 rgba(255,255,255,0.06) inset;pointer-events:all;transform:translateY(120%);transition:transform 0.38s cubic-bezier(0.22,1,0.36,1);display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:38px;height:38px;border-radius:10px;background:rgba(225,29,116,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--hi)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:800;color:var(--text);letter-spacing:-0.2px;margin-bottom:3px;">Baca perjanjian kami dulu ya!</div>
+          <div style="font-size:12px;color:var(--subtext);line-height:1.5;">Please read our agreement first before starting. Klik <strong style="color:var(--hi)">Read</strong> untuk baca & setuju.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button id="agree-close-btn" onclick="closeAgreeDialog()" style="flex:1;padding:10px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg3);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;-webkit-tap-highlight-color:transparent;">Nanti</button>
+        <button id="agree-read-btn" onclick="readAgreement()" style="flex:2;padding:10px;border-radius:12px;border:none;background:var(--hi);font-size:13px;font-weight:800;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:0 2px 12px rgba(225,29,116,0.35);">📄 Read</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+  <!-- EDIT PROFILE SHEET -->
+  <div class="sheet-overlay" id="edit-profile-sheet" onclick="if(event.target===this)closeSheet('edit-profile-sheet')">
+    <div class="sheet-box" id="edit-profile-box" style="padding:0;border-radius:var(--r-2xl) var(--r-2xl) 0 0;overflow:hidden;padding-bottom:calc(env(safe-area-inset-bottom,0px)+24px)">
+      <div class="sheet-handle" style="margin:12px auto 0"></div>
+      <div style="padding:18px 20px 16px;border-bottom:1px solid var(--sep)">
+        <div style="font-size:17px;font-weight:800;color:var(--text)">Edit Profil</div>
+      </div>
+      <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:14px">
+        <!-- Avatar preview -->
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:4px">
+          <div id="ep-avatar-preview" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#FF6BA8,var(--hi));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;overflow:hidden;box-shadow:var(--sh-lg)"></div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">Foto Profil</div>
+            <div style="font-size:11px;color:var(--subtext);line-height:1.5">URL gambar atau ketik emoji</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--subtext);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:7px">Avatar (URL foto / emoji)</div>
+          <input id="ep-avatar" type="text" placeholder="https://... atau ketik emoji 😎" oninput="previewEpAvatar()" style="width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:14px;outline:none;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--subtext);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:7px">Nama</div>
+          <input id="ep-name" type="text" placeholder="Nama kamu..." style="width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:14px;outline:none;box-sizing:border-box">
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--subtext);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:7px">Bio</div>
+          <textarea id="ep-bio" rows="2" placeholder="Ceritain dirimu..." style="width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:14px;outline:none;resize:none;box-sizing:border-box;font-family:inherit"></textarea>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--subtext);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:7px">Banner Background</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <input id="ep-banner-url" type="text" placeholder="URL gambar banner (opsional)" oninput="previewEpBanner()" style="width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:14px;outline:none;box-sizing:border-box">
+            <div style="font-size:11px;color:var(--subtext)">Atau pilih warna:</div>
+            <div id="ep-banner-presets" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+            <div id="ep-banner-preview" style="height:48px;border-radius:12px;margin-top:4px;transition:background 0.3s"></div>
+          </div>
+        </div>
+        <button onclick="saveProfile()" style="width:100%;padding:14px;border-radius:14px;background:var(--hi);border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:4px;-webkit-tap-highlight-color:transparent">Simpan Profil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN PICKER SHEET -->
+  <div class="sheet-overlay" id="pin-picker-sheet" onclick="if(event.target===this)closeSheet('pin-picker-sheet')">
+    <div class="sheet-box" id="pin-picker-box" style="padding:0;border-radius:var(--r-2xl) var(--r-2xl) 0 0;overflow:hidden;max-height:85dvh;display:flex;flex-direction:column;padding-bottom:calc(env(safe-area-inset-bottom,0px)+16px)">
+      <div class="sheet-handle" style="margin:12px auto 0;flex-shrink:0"></div>
+      <div style="padding:16px 20px;border-bottom:1px solid var(--sep);flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:17px;font-weight:800;color:var(--text)">Tambah Pintasan</div>
+        <div style="font-size:12px;color:var(--subtext)" id="pin-count-label">0/6 dipilih</div>
+      </div>
+      <div style="padding:12px 16px;border-bottom:1px solid var(--sep);flex-shrink:0">
+        <div style="display:flex;gap:8px">
+          <button id="pp-tab-app" class="pp-tab active" onclick="switchPinTab('app')">Apps & Games</button>
+          <button id="pp-tab-news" class="pp-tab" onclick="switchPinTab('news')">Berita</button>
+        </div>
+      </div>
+      <div id="pin-picker-list" style="overflow-y:auto;flex:1;padding:12px 16px"></div>
+    </div>
+  </div>

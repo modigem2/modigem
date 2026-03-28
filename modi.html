@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no, email=no, address=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content, maximum-scale=1.0">
+  <meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0B0A08" media="(prefers-color-scheme: dark)">
+  <title>Modi — Tools & Games</title>
+  <!-- ⚡ INSTANT THEME: sync dengan Modigem via localStorage -->
+  <script>
+  (function(){
+    try {
+      var s = JSON.parse(localStorage.getItem('mdg_state')||'{}');
+      var mode = s.themeMode||(s.dark?'dark':'light');
+      var isDark = mode==='dark'||(mode==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) document.documentElement.classList.add('dark-init');
+      var A={
+        rose:  {l:'#E11D74',d:'#FF2D7A',lt:'rgba(225,29,116,0.11)',dt:'rgba(255,45,122,0.15)',lt2:'rgba(225,29,116,0.06)',dt2:'rgba(255,45,122,0.07)'},
+        blue:  {l:'#0066FF',d:'#3B82F6',lt:'rgba(0,102,255,0.10)', dt:'rgba(59,130,246,0.15)', lt2:'rgba(0,102,255,0.05)', dt2:'rgba(59,130,246,0.07)'},
+        gold:  {l:'#D97706',d:'#F59E0B',lt:'rgba(217,119,6,0.11)', dt:'rgba(245,158,11,0.15)', lt2:'rgba(217,119,6,0.06)', dt2:'rgba(245,158,11,0.07)'},
+        milk:  {l:'#6B7280',d:'#F9FAFB',lt:'rgba(107,114,128,0.10)',dt:'rgba(249,250,251,0.13)',lt2:'rgba(107,114,128,0.05)',dt2:'rgba(249,250,251,0.06)'},
+        black: {l:'#111827',d:'#374151',lt:'rgba(17,24,39,0.10)',  dt:'rgba(55,65,81,0.18)',   lt2:'rgba(17,24,39,0.05)', dt2:'rgba(55,65,81,0.09)'},
+        violet:{l:'#7C3AED',d:'#A78BFA',lt:'rgba(124,58,237,0.11)',dt:'rgba(167,139,250,0.15)',lt2:'rgba(124,58,237,0.06)',dt2:'rgba(167,139,250,0.07)'}
+      };
+      var r=document.documentElement.style;
+      if(s.customColor){
+        var h=s.customColor.replace('#','');
+        var rv=parseInt(h.slice(0,2),16),gv=parseInt(h.slice(2,4),16),bv=parseInt(h.slice(4,6),16);
+        r.setProperty('--hi',s.customColor);
+        r.setProperty('--hi-tint','rgba('+rv+','+gv+','+bv+','+(isDark?'0.15':'0.11')+')');
+        r.setProperty('--hi-tint2','rgba('+rv+','+gv+','+bv+','+(isDark?'0.07':'0.06')+')');
+      } else {
+        var ac=A[s.accent||'blue']||A.blue;
+        r.setProperty('--hi',       isDark?ac.d:ac.l);
+        r.setProperty('--hi-tint',  isDark?ac.dt:ac.lt);
+        r.setProperty('--hi-tint2', isDark?ac.dt2:ac.lt2);
+      }
+    }catch(e){}
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Modi layout ── */
+    .modi-wrap { display:flex; flex-direction:column; min-height:100dvh; background:var(--bg); }
+    .modi-topbar {
+      display:flex; align-items:center; gap:12px;
+      padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 12px;
+      background:var(--bg); border-bottom:1px solid var(--border);
+      position:sticky; top:0; z-index:100;
+    }
+    .modi-back-btn {
+      width:36px; height:36px; border-radius:50%;
+      background:var(--bg3); border:1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; flex-shrink:0; -webkit-tap-highlight-color:transparent;
+      transition:transform 0.13s;
+    }
+    .modi-back-btn:active { transform:scale(0.88); }
+    .modi-title { font-size:18px; font-weight:800; color:var(--text); letter-spacing:-0.4px; flex:1; }
+    /* Tab bar */
+    .modi-tabs {
+      display:flex; gap:0; padding:12px 16px; background:var(--bg);
+      border-bottom:1px solid var(--border); flex-shrink:0;
+    }
+    .modi-tab {
+      flex:1; padding:9px 0; border-radius:10px; border:1.5px solid var(--border);
+      background:transparent; color:var(--subtext); font-size:13px; font-weight:700;
+      cursor:pointer; -webkit-tap-highlight-color:transparent;
+      display:flex; align-items:center; justify-content:center; gap:6px;
+      transition:all 0.18s; margin:0 4px;
+    }
+    .modi-tab:active { transform:scale(0.95); }
+    .modi-tab.active {
+      background:var(--hi-tint); border-color:var(--hi); color:var(--hi);
+    }
+    /* Content area */
+    .modi-content { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-bottom:calc(env(safe-area-inset-bottom,0px)+20px); }
+    .modi-panel { display:none; }
+    .modi-panel.active { display:block; }
+    /* Tools panel */
+    .modi-tools-wrap { padding:16px; }
+    .modi-tools-search {
+      width:100%; box-sizing:border-box; padding:11px 14px 11px 40px;
+      border-radius:var(--r-xl); border:1px solid var(--border);
+      background:var(--card); color:var(--text); font-size:14px;
+      outline:none; -webkit-appearance:none; margin-bottom:14px;
+      font-family:var(--font);
+    }
+    .modi-tools-search-wrap { position:relative; margin-bottom:14px; }
+    .modi-tools-search-wrap svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); pointer-events:none; }
+    /* Minigem panel */
+    .modi-mg-wrap { padding:0; }
+    /* Toast */
+    .modi-toast-wrap { position:fixed; bottom:calc(env(safe-area-inset-bottom,0px)+24px); left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+  </style>
+</head>
+<body>
+<div class="modi-wrap">
+
+  <!-- TOPBAR -->
+  <div class="modi-topbar">
+    <button class="modi-back-btn" onclick="goBackToModigem()" aria-label="Kembali">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="modi-title" id="modi-title">Modi</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="modi-tabs">
+    <button class="modi-tab active" id="tab-tools" onclick="switchTab('tools')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Moditools
+    </button>
+    <button class="modi-tab" id="tab-minigem" onclick="switchTab('minigem')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><rect x="2" y="6" width="20" height="12" rx="5"/><line x1="6" y1="12" x2="10" y2="12" stroke-linecap="round"/><line x1="8" y1="10" x2="8" y2="14" stroke-linecap="round"/></svg>
+      Minigem
+    </button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="modi-content">
+
+    <!-- TOOLS PANEL -->
+    <div class="modi-panel active" id="panel-tools">
+      <div class="modi-tools-wrap">
+        <div class="modi-tools-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--subtext)" stroke-width="2" stroke-linecap="round" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="modi-tools-search" id="tools-search" type="text" placeholder="Cari tools..." oninput="_filterTools(this.value)">
+        </div>
+        <div id="tools-list-wrap"></div>
+      </div>
+    </div>
+
+    <!-- MINIGEM PANEL -->
+    <div class="modi-panel" id="panel-minigem">
+      <div id="minigem-home">
+        <div style="padding:16px 20px 8px;flex-shrink:0">
+          <div style="font-size:22px;font-weight:900;letter-spacing:-0.6px;color:var(--text)">Minigem</div>
+          <div style="font-size:13px;color:var(--subtext);margin-top:2px" id="mg-tagline">Santai sebentar ☕</div>
+        </div>
+        <div class="mg-list">
+          <div class="mg-game-card" onclick="startGame('dino')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#10b981,#059669)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="3" y="11" width="4" height="8" rx="2"/><path d="M7 15h6l2-4h2a2 2 0 0 1 0 4h-2l-1 4H7"/><circle cx="9" cy="8" r="2"/></svg>
+            </div>
+            <div class="mg-game-info"><div class="mg-game-name">Dino Run</div><div class="mg-game-desc" id="mg-desc-dino">Lompati rintangan, raih skor tertinggi</div></div>
+            <div class="mg-hs-block"><div class="mg-hs-label">Best</div><div class="mg-hs-val" id="hs-dino-val">0</div></div>
+          </div>
+          <div class="mg-game-card" onclick="startGame('ttt')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,var(--hi),#f43f5e)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" width="28" height="28"><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+            </div>
+            <div class="mg-game-info"><div class="mg-game-name">Tic Tac Toe</div><div class="mg-game-desc" id="mg-desc-ttt">2 pemain, giliran manual</div></div>
+            <div class="mg-hs-block"><div class="mg-hs-label">Wins</div><div class="mg-hs-val" id="hs-ttt-val">0</div></div>
+          </div>
+          <div class="mg-game-card" onclick="startGame('tap')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+            </div>
+            <div class="mg-game-info"><div class="mg-game-name">Tap Blitz</div><div class="mg-game-desc" id="mg-desc-tap">Tap lingkaran secepat mungkin — 15 detik</div></div>
+            <div class="mg-hs-block"><div class="mg-hs-label">Best</div><div class="mg-hs-val" id="hs-tap-val">0</div></div>
+          </div>
+          <div class="mg-game-card" onclick="startGame('color')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="13.5" cy="6.5" r="2.5" fill="#fff" stroke="none"/><circle cx="17.5" cy="10.5" r="2.5" fill="rgba(255,255,255,0.5)" stroke="none"/><circle cx="8.5" cy="7.5" r="2.5" fill="rgba(255,255,255,0.7)" stroke="none"/><circle cx="6.5" cy="12.5" r="2.5" fill="rgba(255,255,255,0.4)" stroke="none"/><path d="M12 22a7 7 0 1 1 0-14 7 7 0 0 1 0 14z" stroke="#fff" stroke-width="2"/></svg>
+            </div>
+            <div class="mg-game-info"><div class="mg-game-name">Color Match</div><div class="mg-game-desc" id="mg-desc-color">Tap warna teks, bukan arti katanya!</div></div>
+            <div class="mg-hs-block"><div class="mg-hs-label">Best</div><div class="mg-hs-val" id="hs-color-val">0</div></div>
+          </div>
+          <div class="mg-game-card" onclick="startGame('mine')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#6b7280,#374151)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+            </div>
+            <div class="mg-game-info"><div class="mg-game-name">Minesweeper</div><div class="mg-game-desc" id="mg-desc-mine">Hindari bom, buka semua kotak aman</div></div>
+            <div class="mg-hs-block"><div class="mg-hs-label">Wins</div><div class="mg-hs-val" id="hs-mine-val">0</div></div>
+          </div>
+          <div class="mg-game-card" onclick="startGame('reflex')">
+            <div class="mg-game-ico" style="background:linear-gradient(135deg,#ef4444,#b91c1c)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="rgba(255,255,255,0.3)" stroke="#fff"/></svg>
+            </div>
+            <div class="mg-game-info"><div class="mg-game-name">Reflex Test</div><div class="mg-game-desc" id="mg-desc-reflex">Tap saat hijau — JANGAN tap saat merah!</div></div>
+            <div class="mg-hs-block"><div class="mg-hs-label">Best</div><div class="mg-hs-val" id="hs-reflex-val">—</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- GAME AREA (fullscreen overlay) -->
+      <div id="minigem-game" style="display:none;flex-direction:column;"></div>
+    </div>
+
+  </div><!-- end modi-content -->
+</div><!-- end modi-wrap -->
+
+<!-- TOAST -->
+<div class="modi-toast-wrap" id="toast-wrap"></div>
+
+<!-- SHEETS: dibutuhkan oleh tools -->
+<div class="sheet-overlay" id="scanner-sheet" onclick="if(event.target===this)closeScannerSheet()">
+  <div class="sheet-box" id="scanner-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:96dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="tip-sheet" onclick="if(event.target===this)closeSheet('tip-sheet')">
+  <div class="sheet-box" id="tip-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="currency-sheet" onclick="if(event.target===this)closeSheet('currency-sheet')">
+  <div class="sheet-box" id="currency-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="timer-sheet" onclick="if(event.target===this)closeSheet('timer-sheet')">
+  <div class="sheet-box" id="timer-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="battery-sheet" onclick="if(event.target===this)closeSheet('battery-sheet')">
+  <div class="sheet-box" id="battery-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="fconv-sheet" onclick="if(event.target===this)closeSheet('fconv-sheet')">
+  <div class="sheet-box" id="fconv-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="fconv-work-sheet" onclick="if(event.target===this)closeSheet('fconv-work-sheet')">
+  <div class="sheet-box" id="fconv-work-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="calc-sheet" onclick="if(event.target===this)closeSheet('calc-sheet')">
+  <div class="sheet-box" id="calc-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="converter-sheet" onclick="if(event.target===this)closeSheet('converter-sheet')">
+  <div class="sheet-box" id="converter-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="share-web-sheet" onclick="if(event.target===this)closeSheet('share-web-sheet')">
+  <div class="sheet-box" id="share-web-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="qr-sheet" onclick="if(event.target===this)closeSheet('qr-sheet')">
+  <div class="sheet-box" id="qr-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+<div class="sheet-overlay" id="unit-sheet" onclick="if(event.target===this)closeSheet('unit-sheet')">
+  <div class="sheet-box" id="unit-box" style="padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px);max-height:92dvh;overflow-y:auto"><div class="sheet-handle"></div></div>
+</div>
+
+<div class="sheet-overlay" id="qr-gen-sheet" onclick="if(event.target===this)closeSheet('qr-gen-sheet')">
+  <div class="sheet-box" style="max-height:92dvh;overflow-y:auto;padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div><div id="qr-gen-box"></div></div>
+</div>
+<div class="sheet-overlay" id="dl-estimator-sheet" onclick="if(event.target===this)closeSheet('dl-estimator-sheet')">
+  <div class="sheet-box" style="max-height:92dvh;overflow-y:auto;padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div><div id="dl-estimator-box"></div></div>
+</div>
+<div class="sheet-overlay" id="storage-cleaner-sheet" onclick="if(event.target===this)closeSheet('storage-cleaner-sheet')">
+  <div class="sheet-box" style="max-height:92dvh;overflow-y:auto;padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div><div id="storage-cleaner-box"></div></div>
+</div>
+<div class="sheet-overlay" id="apk-reader-sheet" onclick="if(event.target===this)closeSheet('apk-reader-sheet')">
+  <div class="sheet-box" style="max-height:92dvh;overflow-y:auto;padding:16px 22px calc(env(safe-area-inset-bottom,0px)+36px)"><div class="sheet-handle"></div><div id="apk-reader-box"></div></div>
+</div>
+<script src="script.js"></script>
+<script>
+// ── Modi bootstrap ────────────────────────────────────────────────
+
+// Override fungsi-fungsi Modigem yang tidak relevan di Modi
+function goTo() {}
+function renderHome() {}
+function renderExplore() {}
+function renderCharts() {}
+function renderAkun() {}
+function renderSettings() {}
+function renderNotif() {}
+function renderMyReviews() {}
+function renderTentang() {}
+function initFirebase() { return Promise.resolve(); }
+
+// Buka sheet yang dibutuhkan tools (openSheet/closeSheet sudah ada di script.js)
+
+// Back ke Modigem
+function goBackToModigem() {
+  if (document.referrer && document.referrer.includes('index.html')) {
+    history.back();
+  } else {
+    window.location.href = 'index.html';
+  }
+}
+
+// Switch tab
+function switchTab(tab) {
+  document.querySelectorAll('.modi-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.modi-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+  const titles = { tools: 'Moditools', minigem: 'Minigem' };
+  document.getElementById('modi-title').textContent = titles[tab] || 'Modi';
+  if (tab === 'minigem') {
+    try {
+      const s = JSON.parse(localStorage.getItem('mdg_minigem') || '{}');
+      if (s.dino)   MG.hs.dino   = s.dino;
+      if (s.ttt)    MG.hs.ttt    = s.ttt;
+      if (s.tap)    MG.hs.tap    = s.tap;
+      if (s.color)  MG.hs.color  = s.color;
+      if (s.mine)   MG.hs.mine   = s.mine;
+      if (s.reflex) MG.hs.reflex = s.reflex;
+      _mgUpdateHS();
+    } catch(e) {}
+  }
+}
+
+// Override startGame agar pakai panel bukan sheet
+const _origMgShowGame = typeof _mgShowGame === 'function' ? _mgShowGame : null;
+function _mgShowGame(html) {
+  const home = document.getElementById('minigem-home');
+  const game = document.getElementById('minigem-game');
+  if (home) home.style.display = 'none';
+  if (game) {
+    game.style.display = 'flex';
+    game.style.flexDirection = 'column';
+    game.innerHTML = html;
+  }
+}
+function _mgHome() {
+  _mgKill && _mgKill();
+  MG.active = null;
+  const home = document.getElementById('minigem-home');
+  const game = document.getElementById('minigem-game');
+  if (home) { home.style.display = 'block'; }
+  if (game) { game.style.display = 'none'; game.innerHTML = ''; }
+  _mgUpdateHS && _mgUpdateHS();
+}
+
+// Init berdasarkan hash URL
+window.addEventListener('DOMContentLoaded', function() {
+  // Apply dark mode body class
+  try {
+    var s = JSON.parse(localStorage.getItem('mdg_state')||'{}');
+    var mode = s.themeMode||(s.dark?'dark':'light');
+    var isDark = mode==='dark'||(mode==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (isDark) document.body.classList.add('dark');
+    // Apply font
+    if (s.fontFamily) {
+      var fonts = {inter:"'Inter'",nunito:"'Nunito'",grotesk:"'Space Grotesk'",sora:"'Sora'"};
+      var stack = (fonts[s.fontFamily]||"'Inter'") + ",'Noto Sans Arabic','Noto Sans JP','Noto Sans SC','Noto Sans Devanagari',sans-serif";
+      document.documentElement.style.setProperty('--font', stack);
+    }
+  } catch(e) {}
+
+  // Load tools list
+  if (typeof _filterTools === 'function') _filterTools('');
+
+  // Load highscores minigem
+  try {
+    var hs = JSON.parse(localStorage.getItem('mdg_minigem') || '{}');
+    if (hs.dino)   MG.hs.dino   = hs.dino;
+    if (hs.ttt)    MG.hs.ttt    = hs.ttt;
+    if (hs.tap)    MG.hs.tap    = hs.tap;
+    if (hs.color)  MG.hs.color  = hs.color;
+    if (hs.mine)   MG.hs.mine   = hs.mine;
+    if (hs.reflex) MG.hs.reflex = hs.reflex;
+    if (typeof _mgUpdateHS === 'function') _mgUpdateHS();
+  } catch(e) {}
+
+  // Auto-switch tab dari hash
+  var hash = window.location.hash.replace('#','');
+  if (hash === 'minigem') switchTab('minigem');
+  else switchTab('tools');
+});
+</script>
+</body>
+</html>

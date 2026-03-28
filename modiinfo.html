@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Berita & Kabar — Modigem</title>
+  <meta name="theme-color" content="#F8F8F7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1C1C1C" media="(prefers-color-scheme: dark)">
+  <!-- ⚡ INSTANT THEME SYNC — sinkron dengan tema Modigem, cegah flash -->
+  <script>
+  (function(){
+    try{
+      var s=JSON.parse(localStorage.getItem('mdg_state')||'{}');
+      var mode=s.themeMode||(s.dark?'dark':'light');
+      var isDark=mode==='dark'||(mode==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if(isDark) document.documentElement.classList.add('dark-init');
+      var A={
+        rose:  {l:'#E11D74',d:'#FF2D7A',lt:'rgba(225,29,116,0.11)',dt:'rgba(255,45,122,0.15)',lt2:'rgba(225,29,116,0.06)',dt2:'rgba(255,45,122,0.07)'},
+        blue:  {l:'#0066FF',d:'#3B82F6',lt:'rgba(0,102,255,0.10)', dt:'rgba(59,130,246,0.15)', lt2:'rgba(0,102,255,0.05)', dt2:'rgba(59,130,246,0.07)'},
+        gold:  {l:'#D97706',d:'#F59E0B',lt:'rgba(217,119,6,0.11)', dt:'rgba(245,158,11,0.15)', lt2:'rgba(217,119,6,0.06)', dt2:'rgba(245,158,11,0.07)'},
+        milk:  {l:'#6B7280',d:'#F9FAFB',lt:'rgba(107,114,128,0.10)',dt:'rgba(249,250,251,0.13)',lt2:'rgba(107,114,128,0.05)',dt2:'rgba(249,250,251,0.06)'},
+        black: {l:'#111827',d:'#374151',lt:'rgba(17,24,39,0.10)',  dt:'rgba(55,65,81,0.18)',   lt2:'rgba(17,24,39,0.05)', dt2:'rgba(55,65,81,0.09)'},
+        violet:{l:'#7C3AED',d:'#A78BFA',lt:'rgba(124,58,237,0.11)',dt:'rgba(167,139,250,0.15)',lt2:'rgba(124,58,237,0.06)',dt2:'rgba(167,139,250,0.07)'}
+      };
+      var r=document.documentElement.style;
+      if(s.customColor){
+        var h=s.customColor.replace('#','');
+        var rv=parseInt(h.slice(0,2),16),gv=parseInt(h.slice(2,4),16),bv=parseInt(h.slice(4,6),16);
+        r.setProperty('--hi',s.customColor);
+        r.setProperty('--hi-tint','rgba('+rv+','+gv+','+bv+','+(isDark?'0.15':'0.11')+')');
+        r.setProperty('--hi-tint2','rgba('+rv+','+gv+','+bv+','+(isDark?'0.07':'0.06')+')');
+      } else {
+        var ac=A[s.accent||'blue']||A.blue;
+        r.setProperty('--hi',       isDark?ac.d:ac.l);
+        r.setProperty('--hi-tint',  isDark?ac.dt:ac.lt);
+        r.setProperty('--hi-tint2', isDark?ac.dt2:ac.lt2);
+      }
+    }catch(e){}
+  })();
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+    /* ── LIGHT (default) ── */
+    :root{
+      --bg:#F8F8F7;--bg2:#FFFFFF;--bg3:#EDEAE4;
+      --card:#FFFFFF;--card2:#EDEAE4;
+      --border:rgba(0,0,0,0.07);--sep:rgba(60,55,50,0.10);
+      --text:#0E0C09;--text2:#3D3830;
+      --subtext:rgba(60,55,50,0.52);--subtext2:rgba(60,55,50,0.32);
+      --hi:#E11D74;--hi-tint:rgba(225,29,116,0.11);--hi-tint2:rgba(225,29,116,0.06);
+      --green:#16A34A;--red:#DC2626;--orange:#EA580C;--purple:#7C3AED;
+      --safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px);
+      --r-xl:22px;--r-lg:18px;--r-sm:10px;
+      --sh-sm:0 1px 4px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.05);
+      --sh-md:0 2px 8px rgba(0,0,0,0.09),0 4px 16px rgba(0,0,0,0.06);
+      --font:'Inter',-apple-system,'SF Pro Display',sans-serif;
+    }
+
+    /* ── DARK via class (js-applied) ── */
+    html.dark-init,body.dark{
+      --bg:#1C1C1C;--bg2:#292524;--bg3:#3C3835;
+      --card:#292524;--card2:#3C3835;
+      --border:rgba(255,100,160,0.08);--sep:rgba(255,100,160,0.06);
+      --text:#F5F5F5;--text2:rgba(245,245,245,0.82);
+      --subtext:rgba(245,245,245,0.45);--subtext2:rgba(245,245,245,0.26);
+      --green:#22C55E;--red:#F87171;--orange:#FB923C;--purple:#A78BFA;
+      --sh-sm:0 1px 4px rgba(0,0,0,0.6),0 2px 8px rgba(0,0,0,0.4);
+      --sh-md:0 2px 8px rgba(0,0,0,0.7),0 4px 16px rgba(0,0,0,0.5);
+    }
+    /* fallback dark untuk html.dark-init sebelum body ter-render */
+    html.dark-init{background:#1C1C1C;color:#F5F5F5;}
+    html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;}
+    ::-webkit-scrollbar{display:none;}
+    *{scrollbar-width:none;}
+
+    /* ── TOPBAR ── */
+    .topbar{
+      position:sticky;top:0;z-index:100;
+      background:var(--bg);
+      padding:calc(14px + var(--safe-t)) 20px 14px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:14px;
+    }
+    .back-btn{
+      width:36px;height:36px;border-radius:50%;
+      background:var(--card);border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;
+    }
+    .page-title{font-size:20px;font-weight:900;color:var(--text);letter-spacing:-0.5px;}
+    .page-sub{font-size:12px;color:var(--subtext);margin-top:1px;}
+
+    /* ── CONTENT ── */
+    .content{padding:20px;padding-bottom:calc(32px + var(--safe-b));}
+
+    /* ── CARD ── */
+    .news-card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:var(--r-xl);margin-bottom:16px;
+      overflow:hidden;box-shadow:var(--sh-sm);
+    }
+    .news-img{position:relative;height:180px;overflow:hidden;background:var(--card2);}
+    .news-img img{width:100%;height:100%;object-fit:cover;}
+    .news-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.65));}
+    .news-img-bottom{position:absolute;bottom:12px;left:14px;right:14px;}
+    .news-tag-white{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:3px 8px;border-radius:6px;background:rgba(5,150,105,0.85);color:#fff;backdrop-filter:blur(8px);}
+    .news-title-white{font-size:16px;font-weight:800;color:#fff;margin-top:6px;line-height:1.3;letter-spacing:-0.3px;}
+    .news-body-wrap{padding:14px 16px;}
+    .news-tag-green{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:3px 8px;border-radius:6px;background:rgba(5,150,105,0.12);color:#059669;border:1px solid rgba(5,150,105,0.2);}
+    .news-title{font-size:16px;font-weight:800;color:var(--text);margin-top:8px;line-height:1.3;letter-spacing:-0.3px;}
+    .news-body{font-size:14px;color:var(--subtext);line-height:1.6;}
+    .news-date{font-size:11px;color:var(--subtext);margin-top:8px;opacity:0.7;}
+    .news-link{display:block;margin-top:12px;padding:10px;background:var(--hi-tint);border:1px solid rgba(225,29,116,0.2);border-radius:12px;text-align:center;font-size:13px;font-weight:700;color:var(--hi);text-decoration:none;}
+    .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000;}
+    .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+    .tag-video{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:3px 8px;border-radius:6px;background:rgba(99,102,241,0.12);color:#818cf8;border:1px solid rgba(99,102,241,0.2);}
+
+    /* ── EMPTY ── */
+    .empty{text-align:center;padding:80px 0;color:var(--subtext);}
+    .empty-icon{margin-bottom:16px;display:flex;justify-content:center;}
+    .empty-title{font-size:16px;font-weight:700;color:var(--text);}
+    .empty-sub{font-size:13px;margin-top:6px;}
+
+    /* ── LOADING ── */
+    .loading{text-align:center;padding:60px 0;color:var(--subtext);font-size:14px;}
+    .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--hi);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 16px;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="topbar">
+    <button id="btn-back" class="back-btn" aria-label="Kembali" onclick="window.location.href='index.html'">
+  <svg viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2.2" stroke-linecap="round" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg>
+</button>
+
+    <div>
+      <div class="page-title">Berita & Kabar</div>
+      <div class="page-sub">Berita terbaru seputar MOD &amp; aplikasi</div>
+    </div>
+  </div>
+
+  <div class="content" id="news-content">
+    <div class="loading">
+      <div class="spinner"></div>
+      Memuat berita...
+    </div>
+  </div>
+
+<script type="module">
+  // ── Sinkron tema lengkap dari Modigem (dark mode + accent color) ──
+  (function(){
+    try{
+      const s=JSON.parse(localStorage.getItem('mdg_state')||'{}');
+      const mode=s.themeMode||(s.dark?'dark':'light');
+      const isDark=mode==='dark'||(mode==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if(isDark){
+        document.body.classList.add('dark');
+        document.querySelector('meta[name="theme-color"][media*="light"]')?.setAttribute('content','#1C1C1C');
+      }
+      // Terapkan accent color dari Modigem
+      const A={
+        rose:  {l:'#E11D74',d:'#FF2D7A',lt:'rgba(225,29,116,0.11)',dt:'rgba(255,45,122,0.15)',lt2:'rgba(225,29,116,0.06)',dt2:'rgba(255,45,122,0.07)'},
+        blue:  {l:'#0066FF',d:'#3B82F6',lt:'rgba(0,102,255,0.10)', dt:'rgba(59,130,246,0.15)', lt2:'rgba(0,102,255,0.05)', dt2:'rgba(59,130,246,0.07)'},
+        gold:  {l:'#D97706',d:'#F59E0B',lt:'rgba(217,119,6,0.11)', dt:'rgba(245,158,11,0.15)', lt2:'rgba(217,119,6,0.06)', dt2:'rgba(245,158,11,0.07)'},
+        milk:  {l:'#6B7280',d:'#F9FAFB',lt:'rgba(107,114,128,0.10)',dt:'rgba(249,250,251,0.13)',lt2:'rgba(107,114,128,0.05)',dt2:'rgba(249,250,251,0.06)'},
+        black: {l:'#111827',d:'#374151',lt:'rgba(17,24,39,0.10)',  dt:'rgba(55,65,81,0.18)',   lt2:'rgba(17,24,39,0.05)', dt2:'rgba(55,65,81,0.09)'},
+        violet:{l:'#7C3AED',d:'#A78BFA',lt:'rgba(124,58,237,0.11)',dt:'rgba(167,139,250,0.15)',lt2:'rgba(124,58,237,0.06)',dt2:'rgba(167,139,250,0.07)'}
+      };
+      const r=document.documentElement.style;
+      if(s.customColor){
+        const h=s.customColor.replace('#','');
+        const rv=parseInt(h.slice(0,2),16),gv=parseInt(h.slice(2,4),16),bv=parseInt(h.slice(4,6),16);
+        r.setProperty('--hi',s.customColor);
+        r.setProperty('--hi-tint','rgba('+rv+','+gv+','+bv+','+(isDark?'0.15':'0.11')+')');
+        r.setProperty('--hi-tint2','rgba('+rv+','+gv+','+bv+','+(isDark?'0.07':'0.06')+')');
+      } else {
+        const ac=A[s.accent||'blue']||A.blue;
+        r.setProperty('--hi',       isDark?ac.d:ac.l);
+        r.setProperty('--hi-tint',  isDark?ac.dt:ac.lt);
+        r.setProperty('--hi-tint2', isDark?ac.dt2:ac.lt2);
+      }
+    }catch(e){}
+  })();
+
+  // ── Firebase config ──
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDTlHM_Gs9I-l5L3jKFyhP1VwwkmNQFRDs",
+    authDomain: "modigemid.firebaseapp.com",
+    projectId: "modigemid",
+    storageBucket: "modigemid.firebasestorage.app",
+    messagingSenderId: "379877133803",
+    appId: "1:379877133803:web:09c3b82f5ba02cd6181dae",
+    measurementId: "G-G7TKDP6GJM"
+  };
+
+  const wrap = document.getElementById('news-content');
+  function goBackToModigem() {
+  if (document.referrer && document.referrer.includes('index.html')) {
+    history.back();
+  } else {
+    window.location.href = 'index.html';
+  }
+};
+
+
+  function renderNews(list) {
+    if (!list.length) {
+      wrap.innerHTML = `<div class="empty">
+        <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--subtext)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="52" height="52"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8z"/></svg></div>
+        <div class="empty-title">Belum ada berita</div>
+        <div class="empty-sub">Nantikan update terbaru dari kami</div>
+      </div>`;
+      return;
+    }
+    wrap.innerHTML = list.map(n => {
+      const isVideo = n.contentType === 'video';
+      const hasImg  = n.imageUrl && n.imageUrl.trim();
+      const hasLink = n.link && n.link !== '#';
+
+      if (isVideo) {
+        let embedUrl = n.videoUrl || '';
+        const ytMatch = embedUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+        if (ytMatch) embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}`;
+        return `<div class="news-card">
+          <div class="video-wrap">
+            <iframe src="${embedUrl}" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="news-body-wrap">
+            <span class="tag-video">🎥 ${n.tag||'Video'}</span>
+            <div class="news-title" style="margin-top:8px;">${n.title||''}</div>
+            ${n.body?`<div class="news-body" style="margin-top:6px;">${n.body}</div>`:''}
+            ${n.publishedAt?`<div class="news-date">${n.publishedAt}</div>`:''}
+          </div>
+        </div>`;
+      }
+
+      return `<div class="news-card">
+        ${hasImg ? `<div class="news-img">
+          <img src="${n.imageUrl}" alt="${n.title||''}" onerror="this.parentElement.style.display='none'">
+          <div class="news-img-overlay"></div>
+          <div class="news-img-bottom">
+            <span class="news-tag-white">${n.tag||''}</span>
+            <div class="news-title-white">${n.title||''}</div>
+          </div>
+        </div>` : `<div class="news-body-wrap" style="padding-bottom:0">
+          <span class="news-tag-green">${n.tag||''}</span>
+          <div class="news-title">${n.title||''}</div>
+        </div>`}
+        <div class="news-body-wrap" style="${hasImg?'':'padding-top:10px;'}${hasLink?'padding-bottom:10px;':''}">
+          ${n.body?`<div class="news-body">${n.body}</div>`:''}
+          ${n.publishedAt?`<div class="news-date">${n.publishedAt}</div>`:''}
+          ${hasLink?`<a href="${n.link}" target="_blank" rel="noopener" class="news-link">Baca Selengkapnya →</a>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Load dari Firebase ──
+  try {
+    const { initializeApp }  = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getFirestore, collection, query, orderBy, onSnapshot }
+                              = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+
+    const app = initializeApp(FIREBASE_CONFIG);
+    const db  = getFirestore(app);
+
+    const q = query(collection(db, 'newsGeneral'), orderBy('publishedAt', 'desc'));
+    onSnapshot(q, snap => {
+      const all = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const news = all.filter(n => !n.contentType || n.contentType === 'article' || n.contentType === 'video');
+      renderNews(news);
+    }, err => {
+      console.warn('modiinfo Firebase error:', err.message);
+      wrap.innerHTML = `<div class="empty">
+        <div class="empty-title">Gagal memuat berita</div>
+        <div class="empty-sub">${err.message}</div>
+      </div>`;
+    });
+  } catch(e) {
+    console.warn('modiinfo init error:', e.message);
+    wrap.innerHTML = `<div class="empty">
+      <div class="empty-title">Gagal memuat</div>
+      <div class="empty-sub">${e.message}</div>
+    </div>`;
+  }
+</script>
+</body>
+</html>
